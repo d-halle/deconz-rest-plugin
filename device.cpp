@@ -14,7 +14,6 @@
 #include <QTimerEvent>
 #include <QMetaObject>
 #include <array>
-#include <tuple>
 #include <deconz/dbg_trace.h>
 #include <deconz/node.h>
 #include "device.h"
@@ -198,7 +197,7 @@ Resource *DEV_GetSubDevice(Device *device, const char *prefix, const QString &id
     {
         return nullptr;
     }
-    
+
     for (auto &sub : device->subDevices())
     {
         if (prefix && sub->prefix() != prefix)
@@ -338,7 +337,7 @@ void DEV_NodeDescriptorStateHandler(Device *device, const Event &event)
             DBG_Printf(DBG_DEV, "ZDP node descriptor verified: 0x%016llX\n", device->key());
             d->maxResponseTime = d->hasRxOnWhenIdle() ? RxOnWhenIdleResponseTime
                                                       : RxOffWhenIdleResponseTime;
-            device->item(RAttrSleeper)->setValue(!d->hasRxOnWhenIdle()); // can be overwritten by DDF
+            device->item(RCapSleeper)->setValue(!d->hasRxOnWhenIdle()); // can be overwritten by DDF
             d->setState(DEV_ActiveEndpointsStateHandler);
         }
         else if (!device->reachable()) // can't be queried, go back to #1 init
@@ -875,7 +874,7 @@ void DEV_IdleStateHandler(Device *device, const Event &event)
         }
     }
 
-    if (!device->reachable() && !device->item(RAttrSleeper)->toBool())
+    if (!device->reachable() && !device->item(RCapSleeper)->toBool())
     {
         DBG_Printf(DBG_DEV, "DEV (NOT reachable) Idle event %s/0x%016llX/%s\n", event.resource(), event.deviceKey(), event.what());
     }
@@ -1037,9 +1036,13 @@ void DEV_BindingTableReadHandler(Device *device, const Event &event)
                 }
                 else
                 {
-                    if (status == deCONZ::ZdpNotSupported)
+                    if (status == deCONZ::ZdpNotSupported || status == deCONZ::ZdpNotPermitted)
                     {
                         d->binding.mgmtBindSupported = MGMT_BIND_NOT_SUPPORTED;
+                    }
+                    else
+                    {
+                        DBG_Printf(DBG_DEV, "ZDP read binding table error: 0x%016llX, status: 0x%02X (TODO handle?)\n", device->key(), status);
                     }
                     d->setState(DEV_BindingHandler, STATE_LEVEL_BINDING);
                 }
@@ -2016,7 +2019,7 @@ Device::Device(DeviceKey key, deCONZ::ApsController *apsCtrl, QObject *parent) :
     d->flags.initialRun = 1;
 
     addItem(DataTypeBool, RStateReachable);
-    addItem(DataTypeBool, RAttrSleeper);
+    addItem(DataTypeBool, RCapSleeper);
     addItem(DataTypeUInt64, RAttrExtAddress);
     addItem(DataTypeUInt16, RAttrNwkAddress);
     addItem(DataTypeString, RAttrUniqueId)->setValue(generateUniqueId(key, 0, 0));
@@ -2216,7 +2219,7 @@ bool Device::reachable() const
     {
         return item(RStateReachable)->toBool();
     }
-    else if (!item(RAttrSleeper)->toBool())
+    else if (!item(RCapSleeper)->toBool())
     {
         return item(RStateReachable)->toBool();
     }

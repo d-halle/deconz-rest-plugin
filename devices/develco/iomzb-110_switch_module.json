@@ -125,10 +125,6 @@
           "name": "attr/uniqueid"
         },
         {
-          "name": "config/battery",
-          "awake": true
-        },
-        {
           "name": "config/on"
         },
         {
@@ -145,7 +141,7 @@
             "cl": "0x000f",
             "ep": 112,
             "eval": "Item.val = Attr.val > 0 ? 1003: 1001",
-            "fn": "zcl"
+            "fn": "zcl:attr"
           }
         }
       ]
@@ -181,10 +177,6 @@
           "name": "attr/uniqueid"
         },
         {
-          "name": "config/battery",
-          "awake": true
-        },
-        {
           "name": "config/on"
         },
         {
@@ -201,7 +193,7 @@
             "cl": "0x000f",
             "ep": 113,
             "eval": "Item.val = Attr.val > 0 ? 1003: 1001",
-            "fn": "zcl"
+            "fn": "zcl:attr"
           }
         }
       ]
@@ -237,10 +229,6 @@
           "name": "attr/uniqueid"
         },
         {
-          "name": "config/battery",
-          "awake": true
-        },
-        {
           "name": "config/on"
         },
         {
@@ -257,7 +245,7 @@
             "cl": "0x000f",
             "ep": 114,
             "eval": "Item.val = Attr.val > 0 ? 1003: 1001",
-            "fn": "zcl"
+            "fn": "zcl:attr"
           }
         }
       ]
@@ -293,10 +281,6 @@
           "name": "attr/uniqueid"
         },
         {
-          "name": "config/battery",
-          "awake": true
-        },
-        {
           "name": "config/on"
         },
         {
@@ -313,7 +297,7 @@
             "cl": "0x000f",
             "ep": 115,
             "eval": "Item.val = Attr.val > 0 ? 1003: 1001",
-            "fn": "zcl"
+            "fn": "zcl:attr"
           }
         }
       ]

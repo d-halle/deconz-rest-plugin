@@ -8,7 +8,7 @@
   "status": "Gold",
   "subdevices": [
     {
-      "type": "ZHACarbonMonoxide",
+      "type": "$TYPE_CARBONMONOXIDE_SENSOR",
       "restapi": "/sensors",
       "uuid": [
         "$address.ext",
@@ -93,7 +93,7 @@
             "cmd": "0x04",
             "ep": 1,
             "eval": "Item.val = (ZclFrame.payloadSize == 1 && ZclFrame.at(0) == 0x00) ? false : true;",
-            "fn": "zcl",
+            "fn": "zcl:attr",
             "mf": "0x115F"
           },
           "read": {
@@ -101,11 +101,12 @@
           },
           "write": {
             "at": "0xFFF1",
+            "change.timeout": 60,
             "cl": "0x0500",
             "dt": "0x23",
             "ep": 1,
             "eval": "if (Item.val) { 0x03010000 }",
-            "fn": "zcl",
+            "fn": "zcl:attr",
             "mf": "0x115F"
           },
           "values": [
@@ -121,23 +122,24 @@
             "cl": "0x0500",
             "ep": 1,
             "eval": "const i = Number(Attr.val).toString(16)[2]; Item.val = [0, 1, 2][i - 1];",
-            "fn": "zcl",
+            "fn": "zcl:attr",
             "mf": "0x115F"
           },
           "read": {
             "at": "0xFFF0",
             "cl": "0x0500",
             "ep": 1,
-            "fn": "zcl",
+            "fn": "zcl:attr",
             "mf": "0x115F"
           },
           "write": {
             "at": "0xFFF1",
+            "change.timeout": 600,
             "cl": "0x0500",
             "dt": "0x23",
             "ep": 1,
             "eval": "0x04000000 + [0x00010000, 0x00020000, 0x00030000][Item.val];",
-            "fn": "zcl",
+            "fn": "zcl:attr",
             "mf": "0x115F"
           },
           "values": [
